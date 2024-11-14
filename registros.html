@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registros de Estudiantes</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #11cae2, #3b0bc2);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 800px;
+            background-color: #000000; 
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgb(245, 240, 240);
+            text-align: center; 
+            color: #ffeeee;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+
+        h2 {
+            color: #fcf3f3; 
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ffeeee;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #00fff2; 
+            color: rgb(0, 0, 0);
+        }
+
+        tr:nth-child(even) {
+            background-color: #ffffff; 
+        }
+
+        a {
+            display: block;
+            margin-top: 20px;
+            color: #ffffff; 
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .edit, .delete {
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: rgb(255, 238, 238);
+        }
+
+        .edit {
+            background-color: #29cbf3; 
+        }
+
+        .delete {
+            background-color: #d635dc; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>REGISTRO DE ESTUDIANTES</h2>
+        <input type="text" id="search-input" placeholder="Buscar por nombre o carrera..." onkeyup="filtrarRegistros()">
+        <table>
+            <thead>
+                <tr>
+                    <th>Carrera</th>
+                    <th>Nombre</th>
+                    <th>Curso</th>
+                    <th>Paralelo</th>
+                    <th>Turno</th>
+                    <th>Enfermedad</th>
+                    <th>Cuidados</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="registros-body">
+       
+            </tbody>
+        </table>
+        <a href="formulario.html">Volver al formulario</a> 
+    </div>
+
+    <script>
+        const registros = JSON.parse(localStorage.getItem('registros')) || [];
+        const registrosBody = document.getElementById('registros-body');
+
+        function mostrarRegistros(registrosFiltrados = registros) {
+            registrosBody.innerHTML = ''; 
+            registrosFiltrados.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = 
+                    `<td>${item.carrera}</td>
+                    <td>${item.nombre}</td>
+                    <td>${item.curso}</td>
+                    <td>${item.paralelo}</td>
+                    <td>${item.turno || 'No especificado'}</td>
+                    <td>${item.enfermedad || 'No especificada'}</td>
+                    <td>${item.cuidados || 'No especificados'}</td>
+                    <td class="action-buttons">
+                        <button class="edit" onclick="editarRegistro(${index})">Editar</button>
+                        <button class="delete" onclick="eliminarRegistro(${index})">Eliminar</button>
+                    </td>`;
+                registrosBody.appendChild(row);
+            });
+        }
+
+        function filtrarRegistros() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const registrosFiltrados = registros.filter(item => 
+                item.nombre.toLowerCase().includes(query) || 
+                item.carrera.toLowerCase().includes(query)
+            );
+            mostrarRegistros(registrosFiltrados);
+        }
+
+        function editarRegistro(index) {
+            const item = registros[index];
+            const carrera = prompt("Carrera:", item.carrera);
+            const nombre = prompt("Nombre:", item.nombre);
+            const curso = prompt("Curso:", item.curso);
+            const paralelo = prompt("Paralelo:", item.paralelo);
+            const turno = prompt("Turno:", item.turno);
+            const enfermedad = prompt("Enfermedad:", item.enfermedad);
+            const cuidados = prompt("Cuidados:", item.cuidados);
+
+            if (nombre && curso && paralelo) {
+                registros[index] = { carrera, nombre, curso, paralelo, turno, enfermedad, cuidados };
+                localStorage.setItem('registros', JSON.stringify(registros));
+                mostrarRegistros();
+            }
+        }
+
+        function eliminarRegistro(index) {
+            if (confirm("¿Estás seguro de que deseas eliminar este registro?")) {
+                registros.splice(index, 1);
+                localStorage.setItem('registros', JSON.stringify(registros));
+                mostrarRegistros();
+            }
+        }
+
+        mostrarRegistros(); 
+    </script>
+</body>
+</html>

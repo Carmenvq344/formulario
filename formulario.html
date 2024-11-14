@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro de Estudiantes</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+         background: linear-gradient(135deg, #cf18c0, #3b0bc2);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #ffeeee;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 800px;
+            background-color: #000000; 
+            padding: 40px;
+            align:center;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgb(255, 255, 255);}rgba(255, 255, 255, 0.1)
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        
+
+        h2 {
+            text-align: center;
+            color: #ffffff; 
+            font-size: 36px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 16px;
+            color: #ffffff; 
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: #fffdff; 
+            outline: none;
+        }
+
+        button[type="submit"] {
+            background: linear-gradient(135deg, #7d1bd8, #0a27cc); 
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 20px;
+            transition: background 0.3s ease;
+            width: 100%;
+        }
+
+        button[type="submit"]:hover {
+            background: linear-gradient(135deg, #3df5ec, #7b19d6);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>FORMULARIO DE REGISTRO</h2>
+        
+        <form id="registro-form">
+            <div class="form-group">
+                <label for="carrera">Carrera:</label>
+                <select id="carrera">
+                    <option value="">Seleccione una carrera</option>
+                    <option value="sistemas">Sistemas Informáticos</option>
+                    <option value="secretariado">Secretariado Ejecutivo</option>
+                    <option value="telecomunicaciones">Telecomunicaciones</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" placeholder="Ingrese su nombre" required>
+            </div>
+            <div class="form-group">
+                <label for="curso">Curso:</label>
+                <input type="text" id="curso" placeholder="Ingrese su curso" required>
+            </div>
+            <div class="form-group">
+                <label for="paralelo">Paralelo:</label>
+                <input type="text" id="paralelo" placeholder="Ingrese su paralelo" required>
+            </div>
+            <div class="form-group">
+                <label for="enfermedad">Enfermedad:</label>
+                <input type="text" id="enfermedad" placeholder="Ingrese enfermedad (si la hay)">
+            </div>
+            <div class="form-group">
+                <label for="cuidados">Cuidados:</label>
+                <input type="text" id="cuidados" placeholder="Ingrese cuidados especiales">
+            </div>
+            <div class="form-group">
+                <label for="turno">Turno:</label>
+                <select id="turno">
+                    <option value="">Seleccione el turno (opcional)</option>
+                    <option value="mañana">Mañana</option>
+                    <option value="tarde">Tarde</option>
+                </select>
+            </div>
+
+            <button type="submit">Registrar</button>
+        </form>
+
+        <a href="registros.html">Ver Registros</a>
+    </div>
+
+    <script>
+        const form = document.getElementById('registro-form');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); 
+
+            const carrera = form['carrera'].value;
+            const nombre = form['nombre'].value;
+            const curso = form['curso'].value;
+            const paralelo = form['paralelo'].value;
+            const turno = form['turno'].value;
+            const enfermedad = form['enfermedad'].value;
+            const cuidados = form['cuidados'].value;
+
+            const registros = JSON.parse(localStorage.getItem('registros')) || [];
+            if (nombre && curso && paralelo) { 
+                registros.push({ carrera, nombre, curso, paralelo, turno, enfermedad, cuidados });
+                localStorage.setItem('registros', JSON.stringify(registros));
+                form.reset(); 
+            } else {
+                alert("Por favor, complete los campos obligatorios.");
+            }
+        });
+    </script>
+</body>
+</html>
